@@ -11,12 +11,7 @@ port: port,
 
 server.register([
 {
-register: require('crumb'),
-options: {
-cookieOptions: {
-isSecure: true
-}
-}
+register: require('hapi-auth-jwt2')
 }
 ], function (err) {
 if (err) {
@@ -25,7 +20,7 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/cors/origin/2',
+path: '/cors/origin/4',
 config: {
 cors: {
 origin: ['*']
