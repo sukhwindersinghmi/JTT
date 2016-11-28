@@ -23,8 +23,7 @@ method: 'GET',
 path: '/directory/{path*}',
 handler: {
 directory: {
-path: './',
-showHidden: false
+path: './'
 }
 }
 }
