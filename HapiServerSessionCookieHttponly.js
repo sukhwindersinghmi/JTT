@@ -13,23 +13,22 @@ server.register([
 {
 register: require('crumb'),
 options: {
-cookieOptions: {
-isSecure: true
-}
+key: 'X-CSRF-Token',
+size: 10
 }
 }
 ], function (err) {
 if (err) {
 throw err;
 }
+});
 
 server.route({
 method: 'GET',
-path: '/cors/origin/1',
+path: '/',
 handler: function (request, reply) {
 reply('Hello World');
 }
-});
 });
 
 server.start(function () {
