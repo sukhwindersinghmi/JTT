@@ -1,11 +1,10 @@
 'use strict';
 
 var Hapi = require('hapi');
+var yourEncrypt = require('cryptiles');
 var Blankie = require('blankie');
 var Scooter = require('scooter');
 const Inert = require('inert');
-
-var yourEncrypt = require('cryptiles');
 var port = 3000; // process.env.PORT || 3000; // allow port to be set by environment
 
 var server = new Hapi.Server();
@@ -18,7 +17,10 @@ server.register([
 {
 register: require('hapi-server-session'),
 options: {
+key: yourEncrypt.randomString(16),
+expiresIn: 100000000,
 cookie: {
+isHttpOnly: false,
 isSecure: false
 }
 }
