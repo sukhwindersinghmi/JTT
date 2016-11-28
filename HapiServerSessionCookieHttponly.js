@@ -19,6 +19,10 @@ server.connection({
 host: 'localhost',
 address: '127.0.0.1',
 port: port,
+tls: {
+key: fs.readFileSync('/etc/mysslkeys/example.com/privatekey.pem'),
+cert: fs.readFileSync('/etc/mysslkeys/example.com/certificate.pem')
+}
 });
 
 server.register([
