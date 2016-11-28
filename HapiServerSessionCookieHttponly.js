@@ -11,16 +11,11 @@ resave: true,
 saveUninitialized: true,
 cookie: {
 httpOnly: true,
-secure: true,
+secure: false,
 domain: '.example.com',
 path: '/admin'
 }
 };
-
-if (app.get('env') === 'test') {
-app.set('trust proxy', 1);
-sess.cookie.secure = false;
-}
 
 app.disable('x-powered-by');
 app.use(expSess(sess));
