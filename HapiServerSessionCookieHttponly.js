@@ -1,31 +1,36 @@
-const hapi = require('hapi');
-const server = new hapi.Server();
-var cryptiles = require('cryptiles');
-var Bcrypt = require('bcrypt');
-const Basic = require('hapi-auth-basic');
-const Inert = require('inert');
-var crypto = require('crypto');
-
 'use strict';
 
+const Hapi = require('hapi');
+const server = new Hapi.Server();
+const port = 3000;
+
 server.connection({
-host: 'localhost',
-address: '127.0.0.1',
-port: 3000,
+port: port
 });
 
-//server.register(Inert, () => {});
-server.register(Inert, function () {});
+server.register([
+{
+register: require('inert')
+}
+], function (err) {
+if (err) {
+throw err;
+}
 
-server.route({
+server.route([
+{
 method: 'GET',
-path: '/{path*}',
+path: '/directory/{path*}',
 handler: {
 directory: {
-path: '../test.html',
-listing: true
+path: './',
+showHidden: true
 }
 }
+}
+]);
 });
 
-server.start();
+server.start(function () {
+console.log('Now Visit: http://localhost:' + port);
+});
