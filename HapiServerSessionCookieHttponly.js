@@ -1,29 +1,25 @@
-
-
 var express = require('express');
+var session = require('express-session')
 var app = express();
-var bodyParser = require('body-parser');
-
-var validator = require('validator');
-var sanitize = require('mongo-sanitize');
-var helmet = require('helmet');
 
 app.disable('x-powered-by');
-app.use(express.static(__dirname + '/public'));
-app.use(bodyParser.json());
+app.use(session({
+secret: 'some secrete code',
+resave: false,
+saveUninitialized: true
+}));
 
-urlMap = {
-"home": "http://mysite.com/",
-"confirm": "http://mysite.com/confirmation/",
-"logout": "http://mysite.com/logout",
-"partner1": "http://partner1.com/"
-}
-
-app.post('/next', function(req, res){
-var url = urlMap[res.param.url];
-if (url != undefined) {
-res.redirect(urlMap[res.params.url]);
-} else {
-res.redirect(urlMap["home"]);
-}
+app.get('/awesome', function(req, res) {
+req.session.lastPage = '/awesome';
+res.send('Your Awesome.');
 });
+
+app.get('/next', function(req, res){
+console.log("go to the next page "+ req.session.lastPage);//app.locals.url);
+var _url = req.session.lastPage;
+//redirect user to the value from req.session, but prepend it with protocol and host
+res.redirect(302, 'https://' + req.hostname + '/' + req.session.lastPage);
+});
+
+app.listen(3000);
+console.log("Server running on port 3000");
