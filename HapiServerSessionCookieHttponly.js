@@ -1,8 +1,5 @@
 'use strict';
 const hapi = require('hapi');
-const Crypto = require('crypto');
-const Joi = require('joi');
-
 const server = new hapi.Server();
 
 const port = 3000;
@@ -16,9 +13,8 @@ server.register([
 {
 register: require('crumb'),
 options: {
-
+key: 'crumb'
 }
-
 }
 ], function (err) {
 if (err) {
