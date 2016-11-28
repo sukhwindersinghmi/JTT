@@ -25,7 +25,7 @@ The insecure_script folder contains index.html file with the below code
 <body>
 This is some text
 <p>
-This script doesn't fire the trigger
+This script doesnt fire the trigger
 <script src="js/stupid_client_script.js"></script>
 This script fires the trigger
 <script src="http://www.example.com/example.js"></script>
