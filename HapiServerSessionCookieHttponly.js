@@ -1,19 +1,32 @@
 'use strict';
 
 var express = require('express');
-var path = require('path');
+var expSess = require("express-session");
 var app = express();
 
-app.disable('X-Powered-By');
+var sess = {
+secret: 'keyboard cat',
+key: "sessionId",
+resave: true,
+saveUninitialized: true,
+cookie: {
+httpOnly: true,
+secure: true,
+domain: '.example.com',
+path: '/admin'
+}
+};
 
-function getUserHomeDirectory(username) {
-console.log("Resolving " + username + " to home directory");
-return path.resolve(__dirname, 'home', username);
+if (app.get('env') === 'test') {
+app.set('trust proxy', 1);
+sess.cookie.secure = false;
 }
 
-app.get('/path/:username', function(req, res) {
-var username = req.params.username;
-res.send('Your home directory is located at: ' + getUserHomeDirectory(username));
+app.disable('x-powered-by');
+app.use(expSess(sess));
+
+app.get('/', function (req, res) {
+res.send('Hello World');
 });
 
 var server = app.listen(3000, function () {
