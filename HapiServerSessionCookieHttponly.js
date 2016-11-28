@@ -15,22 +15,26 @@ register: require('crumb'),
 options: {
 cookieOptions: {
 isSecure: true
-},
-key: 'X-CSRF-Token'
+}
 }
 }
 ], function (err) {
 if (err) {
 throw err;
 }
-});
 
 server.route({
 method: 'GET',
-path: '/',
+path: '/cors/origin/3',
+config: {
+cors: {
+origin: ['http://www.facebook.com']
+}
+},
 handler: function (request, reply) {
 reply('Hello World');
 }
+});
 });
 
 server.start(function () {
