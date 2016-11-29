@@ -1,35 +1,35 @@
 'use strict';
-const hapi = require('hapi');
-const server = new hapi.Server();
 
-const port = 3000;
-server.connection({
-host: 'localhost',
-address: '127.0.0.1',
-port: port,
+var express = require('express');
+var expSess = require("express-session");
+var app = express();
+
+var sess = {
+secret: 'keyboard cat',
+key: "sessionId",
+resave: true,
+saveUninitialized: true,
+cookie: {
+httpOnly: true,
+secure: true,
+domain: '.example.com',
+path: '/admin'
+}
+};
+
+if (app.get('env') === 'test') {
+app.set('trust proxy', 1);
+sess.cookie.secure = false;
+}
+
+app.disable('x-powered-by');
+app.use(expSess(sess));
+
+app.get('/', function (req, res) {
+res.send('Hello World');
 });
 
-server.register([
-{
-register: require('crumb'),
-options: {
-key: 'X-CSRF-Token'
-}
-}
-], function (err) {
-if (err) {
-throw err;
-}
-});
-
-server.route({
-method: 'GET',
-path: '/',
-handler: function (request, reply) {
-reply('Hello World');
-}
-});
-
-server.start(function () {
-console.log('Now Visit: http://localhost:' + port);
+var server = app.listen(3000, function () {
+var port = server.address().port;
+console.log('Your app listening at http://localhost:%s', port);
 });
