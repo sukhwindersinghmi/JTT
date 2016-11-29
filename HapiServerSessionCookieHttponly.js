@@ -4,12 +4,21 @@ var https = require('https');
 var fs = require('fs');
 
 var options = {
-key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
-cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem'),
-secureProtocol: 'SSLv3_method'
+hostname: 'example.com',
+port: 443,
+path: '/',
+method: 'GET'
 };
 
-https.createServer(options, function (req, res) {
-res.writeHead(200);
-res.end("hello world\n");
-}).listen(8000);
+var aOption = {
+key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem'),
+secureProtocol: 'SSLv2_method',
+ca: fs.readFileSync('ca.cert.pem')
+};
+
+options.agentOptions = aOption;
+
+var req = https.request(options, function(res) {
+console.log(res);
+});
