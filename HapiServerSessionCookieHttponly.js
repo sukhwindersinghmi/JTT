@@ -1,30 +1,15 @@
 'use strict';
 
-var express = require('express');
-var expSess = require("express-session");
-var app = express();
-var bodyParser = require('body-parser');
+var https = require('https');
+var fs = require('fs');
 
-// support json encoded bodies
-app.use(bodyParser.json());
-// support encoded bodies
-app.use(bodyParser.urlencoded({extended: true}));
+https.globalAgent.options.secureProtocol = 'SSLv2_method';
+var options = {
+key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
+};
 
-// Register templating engine
-app.engine('html', require('ejs').renderFile);
-app.set("view engine", "html");
-app.set("views", __dirname + "/static/views");
-app.use(express.static(__dirname + '/static'));
-app.disable('x-powered-by');
-
-// ======= for MongoDB mass assignment test =======
-//require('./massassignment/test.insert-one-param')(app);
-//require('./massassignment/test.insert-two-params')(app);
-require('./massassignment/test.positive-mongoose')(app);
-
-
-
-var server = app.listen(3000, function() {
-  var port = server.address().port;
-  console.log('Your app listening at http://localhost:%s', port);
-});
+https.createServer(options, function (req, res) {
+res.writeHead(200);
+res.end("Hello World\n");
+}).listen(8000);
