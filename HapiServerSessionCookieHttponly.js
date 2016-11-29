@@ -1,24 +1,25 @@
 'use strict';
 
-var https = require('https');
-var fs = require('fs');
+var express = require('express');
+var app = express();
 
-var options = {
-hostname: 'example.com',
-port: 443,
-path: '/',
-method: 'GET'
-};
+var pmongo = require('promised-mongo');
+var db = pmongo('contactlist', ['contactlist']);
 
-var aOption = {
-key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
-cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem'),
-secureProtocol: 'SSLv2_method',
-ca: fs.readFileSync('ca.cert.pem')
-};
+app.disable('x-powered-by');
 
-options.agentOptions = aOption;
+app.post('/negative', function(req, res) {
+var x = req.body;
+eval(x + 3);
+res.send('Hello World');
+});
 
-var req = https.request(options, function(res) {
-console.log(res);
+app.post('/positive', function(req, res) {
+eval('console.log("Hello World")');
+res.send('Hello again');
+});
+
+var server = app.listen(3000, function () {
+var port = server.address().port;
+console.log('Your app listening at http://localhost:%s', port);
 });
