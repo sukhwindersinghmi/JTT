@@ -3,13 +3,13 @@
 var https = require('https');
 var fs = require('fs');
 
-https.globalAgent.options.secureProtocol = 'SSLv2_method';
 var options = {
 key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
-cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
+cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem'),
+secureProtocol: 'SSLv3_method'
 };
 
 https.createServer(options, function (req, res) {
 res.writeHead(200);
-res.end("Hello World\n");
+res.end("hello world\n");
 }).listen(8000);
