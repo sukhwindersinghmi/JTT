@@ -1,22 +1,14 @@
-const Hapi = require('hapi');
-const server = new Hapi.Server();
-server.connection({
-host: 'localhost',
-port: 8000
+'use strict';
+
+var express = require('express');
+var helmet = require('helmet');
+var app = express();
+
+app.get('/', function (req, res) {
+res.send('Hello World');
 });
-server.route({
-method: 'GET',
-path: '/hello',
-config: {
-handler: function (request, reply) {
-reply({foo: 'bar'});
-},
-jsonp: 'callback'
-}
-});
-server.start((err) => {
-if (err) {
-throw err;
-}
-console.log('Server running at:', server.info.uri);
+
+var server = app.listen(3000, function () {
+var port = server.address().port;
+console.log('Your app listening at http://localhost:%s', port);
 });
