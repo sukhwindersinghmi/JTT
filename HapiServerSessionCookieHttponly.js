@@ -1,25 +1,51 @@
-var express = require('express');
-var session = require('express-session')
-var app = express();
+const Hapi = require('hapi');
+var Blankie = require('blankie');
+var Scooter = require('scooter');
+const Inert = require('inert');
+const server = new Hapi.Server();
+const port = 3000;
 
-app.disable('x-powered-by');
-app.use(session({
-secret: 'some secrete code',
-resave: false,
-saveUninitialized: true
-}));
+var server2 = new Hapi.Server();
 
-app.get('/awesome', function(req, res) {
-req.session.lastPage = '/awesome';
-res.send('Your Awesome.');
+server2.connection({ port: 3000 });
+server2.register([{
+register: Inert,
+options: {}
+},{
+register: Scooter,
+options: {}
+},{
+register: Blankie,
+options: {scriptSrc: 'self'}
+}],
+function (err) {
+if (err) {
+throw err;
+}
 });
 
-app.get('/next', function(req, res){
-console.log("go to the next page "+ req.session.lastPage);//app.locals.url);
-var _url = req.session.lastPage;
-//redirect user to the value from req.session, but prepend it with protocol and host
-res.redirect(302, 'https://' + req.hostname + '/' + req.session.lastPage);
+server.connection({
+port:port
 });
 
-app.listen(3000);
-console.log("Server running on port 3000");
+server.register([{
+register: require('hapi-session-mongo'),
+options: {
+ip: '192.168.0.1',
+db: 'user',
+name: 'sessions',
+pwd: 'shhh i am secret'
+}
+}]);
+
+server.route({
+method: 'GET',
+path: '/',
+handler: (req, reply) => {
+reply('hello');
+}
+});
+
+server.start(() => {
+console.log('Listening at localhost:' + port);
+});
