@@ -3,9 +3,12 @@ var Blankie = require('blankie');
 var Scooter = require('scooter');
 const Inert = require('inert');
 const server = new Hapi.Server();
+const server2 = new Hapi.Server();
 const port = 3000;
 
-var server2 = new Hapi.Server();
+server.connection({
+port:port
+});
 
 server2.connection({ port: 3000 });
 server2.register([{
@@ -24,19 +27,15 @@ throw err;
 }
 });
 
-server.connection({
-port:port
-});
-
-server.register([{
-register: require('hapi-session-mongo'),
+server.pack.register({
+plugin: require('hapi-session-mongo'),
 options: {
-ip: '192.168.0.1',
 db: 'user',
 name: 'sessions',
-pwd: 'shhh i am secret'
+pwd: 'shhh i am secret',
+ssl: true
 }
-}]);
+});
 
 server.route({
 method: 'GET',
