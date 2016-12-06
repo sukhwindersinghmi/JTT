@@ -5,11 +5,30 @@ var Blankie = require('blankie');
 var Scooter = require('scooter');
 const Inert = require('inert');
 const server = new Hapi.Server();
+const server2 = new Hapi.Server();
 const port = 3000;
 
 server.connection({port: port});
 
-var token = jwt.sign(
+server2.connection({port:port});
+
+server2.register([{
+register: Inert,
+options: {}
+},{
+register: Scooter,
+options: {}
+},{
+register: Blankie,
+options: {scriptSrc: 'self'}
+}],
+function (err) {
+if (err) {
+throw err;
+}
+});
+
+let token = jwt.sign(
 {
 id: user._id,
 name: user.name,
@@ -40,23 +59,13 @@ console.log("Get Main Function");
 reply('hello, ' + request.auth);
 }
 
-server.register([{register:authJwt},
-{
-register: Inert,
-options: {}
-},{
-register: Scooter,
-options: {}
-},{
-register: Blankie,
-options: {scriptSrc: 'self'}
-}], function(err){
+server.register(authJwt, function(err){
 server.auth.strategy('jwt-auth', 'jwt', {
 key: config.jwt_hmac_secret, //obtain secret from config file
 validateFunc: validate, //point to defined 'validate' function
 verifyOptions: { //provide verification options to jsonwebtokens library
 algorithms: ['HS256'],
-ignoreExpiration: false
+ignoreNotBefore: false
 }
 });
 });
