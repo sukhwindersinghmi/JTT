@@ -9,7 +9,7 @@ const port = 3000;
 
 server.connection({port: port});
 
-let token = jwt.sign(
+var token = jwt.sign(
 {
 id: user._id,
 name: user.name,
@@ -56,8 +56,7 @@ key: config.jwt_hmac_secret, //obtain secret from config file
 validateFunc: validate, //point to defined 'validate' function
 verifyOptions: { //provide verification options to jsonwebtokens library
 algorithms: ['HS256'],
-ignoreNotBefore: false,
-ignoreExpire: false
+ignoreExpiration: false
 }
 });
 });
