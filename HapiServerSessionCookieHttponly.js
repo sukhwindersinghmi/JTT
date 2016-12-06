@@ -1,23 +1,18 @@
 var express = require('express');
-var session = require('express-session')
 var app = express();
 
 app.disable('x-powered-by');
-app.use(session({
-secret: '$^%^$^^GGFFF',
-resave: false,
-saveUninitialized: true
-}));
-
-app.get('/awesome', function(req, res) {
-req.session.lastPage = '/awesome';
-res.send('Your Awesome.');
-});
 
 app.get('/next', function(req, res){
-console.log("go to the next page "+ req.session.lastPage);//app.locals.url);
-//redirect user to the value from req.session
-res.redirect(302, req.session.lastPage);
+console.log("go to the next page "+req.query.url);
+//redirect user to the value from req.query.url
+console.log(("URL="+req.query.url));
+res.redirect(req.query.url);
+});
+
+app.get('/new', function(req, res){
+console.log("The next page ");
+res.send("/new page");
 });
 
 app.listen(3000);
