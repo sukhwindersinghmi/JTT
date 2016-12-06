@@ -64,7 +64,7 @@ key: config.jwt_hmac_secret, //obtain secret from config file
 validateFunc: validate, //point to defined 'validate' function
 verifyOptions: { //provide verification options to jsonwebtokens library
 algorithms: ['HS256'],
-ignoreExpiration: true
+ignoreNotBefore: true
 }
 });
 });
