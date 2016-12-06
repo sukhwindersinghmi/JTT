@@ -11,14 +11,19 @@ resave: true,
 saveUninitialized: true,
 cookie: {
 httpOnly: true,
-secure: true
+secure: true,
+domain: '.example.com',
+path: '/admin'
 }
 };
 
-app.disable('X-Powered-By');
-app.use(expSess(sess));
+if (app.get('env') === 'test') {
+app.set('trust proxy', 1);
+sess.cookie.secure = false;
+}
 
-sess.cookie.httpOnly = false;
+app.disable('x-powered-by');
+app.use(expSess(sess));
 
 app.get('/', function (req, res) {
 res.send('Hello World');
