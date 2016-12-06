@@ -5,13 +5,12 @@ var Blankie = require('blankie');
 var Scooter = require('scooter');
 const Inert = require('inert');
 const server = new Hapi.Server();
+const server2 = new Hapi.Server();
 const port = 3000;
 
 server.connection({port: port});
 
-var server2 = new Hapi.Server();
-server2.connection({ port: 3000 });
-
+server2.connection({port: port});
 server2.register([{
 register: Inert,
 options: {}
@@ -65,7 +64,6 @@ key: config.jwt_hmac_secret, //obtain secret from config file
 validateFunc: validate, //point to defined 'validate' function
 verifyOptions: { //provide verification options to jsonwebtokens library
 algorithms: ['HS256'],
-ignoreNotBefore: true,
 ignoreExpiration: true
 }
 });
