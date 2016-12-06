@@ -2,4 +2,9 @@ var express = require('express');
 var app = express();
 app.disable('x-powered-by');
 
-app.locals.myvalue = '123';
+app.get('/command', function(req, res){
+if (typeof req.params.input == "number") {
+app.locals.myvalue = req.params.input;
+}
+
+});
