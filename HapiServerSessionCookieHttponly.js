@@ -10,7 +10,9 @@ server.connection({
 port:port
 });
 
-server2.connection({ port: 3000 });
+server2.connection({
+port:port
+});
 server2.register([{
 register: Inert,
 options: {}
@@ -30,6 +32,7 @@ throw err;
 server.pack.register({
 plugin: require('hapi-session-mongo'),
 options: {
+ip: '192.168.0.1',
 db: 'user',
 name: 'sessions',
 pwd: 'shhh i am secret',
