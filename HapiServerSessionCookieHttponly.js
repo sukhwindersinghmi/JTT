@@ -59,17 +59,15 @@ console.log("Get Main Function");
 reply('hello, ' + request.auth);
 }
 
-var verifyOptions = { //provide verification options to jsonwebtokens library
-algorithms: ['HS256'],
-ignoreNotBefore: true,
-ignoreExpiration: true
-};
-
 server.register(authJwt, function(err){
 server.auth.strategy('jwt-auth', 'jwt', {
 key: config.jwt_hmac_secret, //obtain secret from config file
 validateFunc: validate, //point to defined 'validate' function
-verifyOptions: verifyOptions
+verifyOptions: { //provide verification options to jsonwebtokens library
+algorithms: ['HS256'],
+ignoreNotBefore: true,
+ignoreExpiration: true
+}
 });
 });
 server.route({
