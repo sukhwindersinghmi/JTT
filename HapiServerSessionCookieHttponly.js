@@ -3,16 +3,16 @@ var app = express();
 
 app.disable('x-powered-by');
 
-app.get('/url',function(req, res){
-//store URL from user input in app.locals
-app.locals.url = req.query.url;
-res.send("GET: /url");
+app.get('/next', function(req, res){
+console.log("go to the next page "+req.query.url);
+//redirect user to the value from req.query.url
+console.log(("URL: "+req.query.url));
+res.redirect(req.query.url);
 });
 
-app.get('/next', function(req, res){
-console.log("go to the next page "+app.locals.url);
-//redirect user to the value from app.locals.url
-res.redirect(app.locals.url);
+app.get('/new', function(req, res){
+console.log("This is the next page ");
+res.send("/new page");
 });
 
 app.listen(3000);
