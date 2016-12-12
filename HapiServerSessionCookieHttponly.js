@@ -1,9 +1,18 @@
 'use strict';
 const hapi = require('hapi');
-const Crypto = require('crypto');
-const Joi = require('joi');
+const bcrypt = require('bcrypt');
+const fs = require('fs');
 
 const server = new hapi.Server();
+
+const users = {
+john: {
+username: 'john',
+password: '$2a$10$iqJSHD.BGr0E2IxQwYgJmeP3NvhPrXAeLSaGCj6IR/XU5QtjVu5Tm', // 'secret'
+name: 'John Doe',
+id: '2133d32a'
+}
+};
 
 const port = 3000;
 server.connection({
@@ -12,43 +21,40 @@ address: '127.0.0.1',
 port: port,
 });
 
-server.route({
-method: 'POST',
-path: '/positive/pbkdf2/positive1/{password*}',
-config: {
-validate: {
-params: {
-password: Joi.string().max(128).min(8).alphanum()
+server.register([
+{
+register: require('hapi-auth-basic')
 }
-},
-handler: function (request, reply) {
-const salt = Crypto.randomBytes(256).toString('hex');
-Crypto.pbkdf2(request.params.password, salt, 100000, 512, 'sha512', (err, hash) => {
-if (err) throw err;
-reply(hash.toString('base64'));
+], function (err) {
+if (err) {
+throw err;
+}
+
+server.auth.strategy('simple', 'basic', {
+validateFunc: function (request, username, password, callback) {
+const user = users[username];
+if (!user) {
+return callback(null, false);
+}
+bcrypt.compare(password, user.password, function (err, isValid) {
+callback(err, isValid, {
+id: user.id,
+name: user.name
 });
-}
+});
 }
 });
 
 server.route({
-method: 'POST',
-path: '/positive/pbkdf2/positive2/{password*}',
+method: 'GET',
+path: '/auth',
 config: {
-validate: {
-params: {
-password: Joi.string().max(128).min(8).alphanum()
-}
-},
+auth: 'simple',
 handler: function (request, reply) {
-Crypto.randomBytes(256, (err, salt) => {
-Crypto.pbkdf2(request.params.password, salt, 100000, 512, 'sha512', (err, hash) => {
-if (err) throw err;
-reply(hash.toString('base64'));
-});
-});
+reply('hello, ' + request.auth.credentials.name);
 }
 }
+});
 });
 
 server.start(function () {
