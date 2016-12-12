@@ -14,9 +14,8 @@ server.register([
 register: require('crumb'),
 options: {
 cookieOptions: {
-isSecure: true
-},
-key: 'X-CSRF-Token'
+isSecure: false
+}
 }
 }
 ], function (err) {
