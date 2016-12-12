@@ -25,9 +25,11 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/cors/origin/1',
+path: '/cors/origin/2',
 config: {
-cors: true
+cors: {
+origin: ['*']
+}
 },
 handler: function (request, reply) {
 reply('Hello World');
