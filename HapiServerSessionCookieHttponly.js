@@ -5,7 +5,6 @@ var cryptiles = require('cryptiles');
 var Blankie = require('blankie');
 var Scooter = require('scooter');
 const Inert = require('inert');
-
 var port = 3000; // process.env.PORT || 3000; // allow port to be set by environment
 
 var server = new Hapi.Server();
@@ -21,7 +20,8 @@ options: {
 key: cryptiles.randomString(16),
 expiresIn: 60000,
 cookie: {
-isHttpOnly: false
+isHttpOnly: false,
+isSecure: false
 }
 }
 },{
