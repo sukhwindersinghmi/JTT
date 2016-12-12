@@ -7,6 +7,8 @@ var Blankie = require('blankie');
 var Scooter = require('scooter');
 const Inert = require('inert');
 
+const scryptParameters = scrypt.paramsSync(0.01);
+
 const server = new Hapi.Server();
 server.app.key = 'super_secret';
 server.connection({
@@ -39,13 +41,13 @@ password: Joi.string().max(128).min(8).alphanum()
 }
 },
 handler: function (request, reply) {
-scrypt.params(0.05, (err, params) => {
-scrypt.kdf(request.params.password, scryptParameters, function(err, hash) {
-if (err) throw err;
-reply(hash.toString('base64'));
-});
-});
+
+  scrypt.kdf(request.params.password, scryptParameters, function(err, hash) {
+    if (err) throw err;
+    reply(hash.toString('base64'));
+  });
 }
+
 }
 });
 
@@ -59,12 +61,8 @@ password: Joi.string().max(128).min(8).alphanum()
 }
 },
 handler: function (request, reply) {
-scrypt.params(0.05, (err, params) => {
-scrypt.kdfSync(request.params.password, scryptParameters, function(err, hash) {
-if (err) throw err;
+var hash = scrypt.kdfSync(request.params.password, scryptParameters);
 reply(hash.toString('base64'));
-});
-});
 }
 }
 });
