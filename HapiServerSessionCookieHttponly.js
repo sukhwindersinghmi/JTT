@@ -10,10 +10,7 @@ key: "sessionId",
 resave: true,
 saveUninitialized: true,
 cookie: {
-httpOnly: true,
-secure: false,
-domain: '.example.com',
-path: '/admin'
+httpOnly: true
 }
 };
 
