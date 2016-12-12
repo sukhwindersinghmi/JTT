@@ -1,55 +1,29 @@
+const hapi = require('hapi');
+const server = new hapi.Server();
+var cryptiles = require('cryptiles');
+var Bcrypt = require('bcrypt');
+const Basic = require('hapi-auth-basic');
+const Inert = require('inert');
+
 'use strict';
 
-var Hapi = require('hapi');
-var yourEncrypt = require('cryptiles');
-var Blankie = require('blankie');
-var Scooter = require('scooter');
-const Inert = require('inert');
-var port = 3000; // process.env.PORT || 3000; // allow port to be set by environment
-
-var server = new Hapi.Server();
-server.app.key = 'secret_app_value_102';
 server.connection({
-port: port
+host: 'localhost',
+address: '127.0.0.1',
+port: 3000,
 });
-
-server.register([
-{
-register: require('hapi-server-session'),
-options: {
-key: yourEncrypt.randomString(16),
-expiresIn: 100000000,
-cookie: {
-isHttpOnly: false,
-isSecure: false
-}
-}
-},{
-register: Inert,
-options: {}
-},{
-register: Scooter,
-options: {}
-},{
-register: Blankie,
-options: {scriptSrc: 'self'}
-}
-], function (err) {
-if (err) {
-throw err;
-}
 
 server.route({
 method: 'GET',
-path: '/',
+path: '/test/{password*}',
+//config: { auth: 'simple' },
 handler: function (request, reply) {
-reply('Hello World');
+//var name = request.auth.credentials.name
+//reply('hello ' + name);
+reply(Bcrypt.hashSync(request.params.password, request.params.hash));
+
 }
-});
+
 });
 
-server.start(function () {
-console.log('Now Visit: http://localhost:' + port + '/');
-});
-
-module.exports = server;
+server.start();
