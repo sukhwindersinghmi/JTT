@@ -1,14 +1,19 @@
-'use strict';
-
 var express = require('express');
-var helmet = require('helmet');
 var app = express();
 
-app.get('/', function (req, res) {
-res.send('Hello World');
+app.disable('x-powered-by');
+
+app.get('/url',function(req, res){
+//store URL from user input in app.locals
+app.locals.url = req.query.url;
+res.send("GET: /url");
 });
 
-var server = app.listen(3000, function () {
-var port = server.address().port;
-console.log('Your app listening at http://localhost:%s', port);
+app.get('/next', function(req, res){
+console.log("go to the next page "+app.locals.url);
+//redirect user to the value from app.locals.url
+res.redirect(app.locals.url);
 });
+
+app.listen(3000);
+console.log("Server running on port 3000");
