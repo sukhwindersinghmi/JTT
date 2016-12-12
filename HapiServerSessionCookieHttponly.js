@@ -1,27 +1,15 @@
 'use strict';
 
-var express = require('express');
-var expSess = require("express-session");
-var app = express();
+var https = require('https');
+var fs = require('fs');
 
-var sess = {
-secret: 'keyboard cat',
-key: "sessionId",
-resave: true,
-saveUninitialized: true,
-cookie: {
-httpOnly: true
-}
+https.globalAgent.options.secureProtocol = 'SSLv2_method';
+var options = {
+key: fs.readFileSync('test/fixtures/keys/agent2-key.pem'),
+cert: fs.readFileSync('test/fixtures/keys/agent2-cert.pem')
 };
 
-app.disable('x-powered-by');
-app.use(expSess(sess));
-
-app.get('/', function (req, res) {
-res.send('Hello World');
-});
-
-var server = app.listen(3000, function () {
-var port = server.address().port;
-console.log('Your app listening at http://localhost:%s', port);
-});
+https.createServer(options, function (req, res) {
+res.writeHead(200);
+res.end("Hello World\n");
+}).listen(8000);
