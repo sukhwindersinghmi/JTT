@@ -1,30 +1,35 @@
-'use strict';
+const Path = require('path');
+const Hapi = require('hapi');
+const Inert = require('inert');
 
-var express = require('express');
-var expSess = require("express-session");
-var app = express();
-
-var sess = {
-secret: 'keyboard cat',
-key: "sessionId",
-resave: true,
-saveUninitialized: true,
-cookie: {
-httpOnly: true,
-secure: true
+const server = new Hapi.Server({
+connections: {
+routes: {
+files: {
+relativeTo: Path.join(__dirname, 'public')
 }
-};
+}
+}
+});
+server.connection({ port: 3000 });
 
-app.disable('X-Powered-By');
-app.use(expSess(sess));
+server.register(Inert, () => {});
 
-sess.cookie.httpOnly = false;
-
-app.get('/', function (req, res) {
-res.send('Hello World');
+server.route({
+method: 'GET',
+path: '/documents/{user}/{file}',
+handler: function(request, reply) {
+var path = Path.join(request.params.user, request.params.file);
+return reply.file(path);
+}
 });
 
-var server = app.listen(3000, function () {
-var port = server.address().port;
-console.log('Your app listening at http://localhost:%s', port);
+server.start((err) => {
+
+if (err) {
+    throw err;
+}
+
+console.log('Server running at:', server.info.uri);
+
 });
