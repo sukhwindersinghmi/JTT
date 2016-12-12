@@ -1,18 +1,18 @@
-//promised-mongo package is used, so mongo calls are returned as promises. 
-//then() function is called on a promise to execute a callback function.
-//untrusted input (req.body) is the only parameter to the insert() function.
+var express = require('express');
+var app = express();
 
-module.exports = function(app) {
-  'use strict';
+app.disable('X-Powered-By');
 
-  var pmongo = require('promised-mongo');
-  var db = pmongo('contactlist', ['contactlist']);
+// Register templating engine
+app.engine('html', require('ejs').renderFile);
+app.set("view engine", "html");
+app.set("views", __dirname + "/insecure_script");
 
-  app.post('/contactlist_insert_one_param', function(req, res) {
-    console.log("Insert " + req.body);
-    db.contactlist.insert(req.body).then(function() {
-      console.log('Finished!');
-      res.json(doc);
-    });
-  });
-};
+app.get('/', function(req, res) {
+res.sendFile('index');
+});
+
+var server = app.listen(3000, function() {
+var port = server.address().port;
+console.log('Your app listening at http://localhost:%s', port);
+});
