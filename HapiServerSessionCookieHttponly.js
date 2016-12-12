@@ -24,7 +24,7 @@ path: '/directory/{path*}',
 handler: {
 directory: {
 path: './',
-showHidden: true
+showHidden: false
 }
 }
 }
