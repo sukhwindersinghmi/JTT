@@ -1,7 +1,6 @@
 'use strict';
 
 var Hapi = require('hapi');
-var cryptiles = require('cryptiles');
 var Blankie = require('blankie');
 var Scooter = require('scooter');
 const Inert = require('inert');
@@ -17,10 +16,8 @@ server.register([
 {
 register: require('hapi-server-session'),
 options: {
-key: cryptiles.randomString(16),
-expiresIn: 60000,
 cookie: {
-isSecure: false
+isSecure: true
 }
 }
 },{
