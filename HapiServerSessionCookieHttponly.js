@@ -5,20 +5,15 @@
 var express = require('express');
 var app = express();
 
-var pmongo = require('promised-mongo');
-var db = pmongo('contactlist', ['contactlist']);
-
 app.disable('x-powered-by');
 
-app.post('/negative', function(req, res) {
-var x = req.body;
-eval(x + 3);
-res.send('Hello World');
-});
+var min = 1;
+var max = 10;
+var rnd1 = Math.floor(Math.random() * (max - min) + min - Math.random());
 
-app.post('/positive', function(req, res) {
-eval('console.log("Hello World")');
-res.send('Hello again');
+app.post('/', function(req, res) {
+req.session.sessionId = max < rnd1 ? rnd1: max;
+res.send('PRNG test');
 });
 
 var server = app.listen(3000, function () {
