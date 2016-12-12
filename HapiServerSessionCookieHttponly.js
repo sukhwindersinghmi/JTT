@@ -11,7 +11,12 @@ port: port,
 
 server.register([
 {
-register: require('hapi-auth-jwt2')
+register: require('crumb'),
+options: {
+cookieOptions: {
+isSecure: true
+}
+}
 }
 ], function (err) {
 if (err) {
@@ -20,10 +25,10 @@ throw err;
 
 server.route({
 method: 'GET',
-path: '/cors/origin/4',
+path: '/cors/origin/3',
 config: {
 cors: {
-origin: ['*']
+origin: ['http://www.facebook.com']
 }
 },
 handler: function (request, reply) {
