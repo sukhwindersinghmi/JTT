@@ -20,7 +20,6 @@ options: {
 key: cryptiles.randomString(16),
 expiresIn: 60000,
 cookie: {
-isHttpOnly: false,
 isSecure: false
 }
 }
