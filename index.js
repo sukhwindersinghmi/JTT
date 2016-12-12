@@ -1,5 +1,3 @@
-const server = new Hapi.Server();
-server.connection({
-host: 'localhost',
-port: 8000
+document.ready(function () {
+console.log("Hello World!");
 });
