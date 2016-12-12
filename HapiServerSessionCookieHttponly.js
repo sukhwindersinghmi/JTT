@@ -10,13 +10,15 @@ key: "sessionId",
 resave: true,
 saveUninitialized: true,
 cookie: {
-httpOnly: false,
+httpOnly: true,
 secure: true
 }
 };
 
 app.disable('X-Powered-By');
 app.use(expSess(sess));
+
+sess.cookie.httpOnly = false;
 
 app.get('/', function (req, res) {
 res.send('Hello World');
