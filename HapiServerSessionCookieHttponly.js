@@ -1,33 +1,38 @@
 'use strict';
+const hapi = require('hapi');
+const server = new hapi.Server();
 
-const Hapi = require('hapi');
-const server = new Hapi.Server();
 const port = 3000;
-
 server.connection({
-port: port
+host: 'localhost',
+address: '127.0.0.1',
+port: port,
 });
 
 server.register([
 {
-register: require('inert')
+register: require('crumb'),
+options: {
+cookieOptions: {
+isSecure: true
+}
+}
 }
 ], function (err) {
 if (err) {
 throw err;
 }
 
-server.route([
-{
+server.route({
 method: 'GET',
-path: '/directory/{path*}',
-handler: {
-directory: {
-path: './'
+path: '/cors/origin/1',
+config: {
+cors: true
+},
+handler: function (request, reply) {
+reply('Hello World');
 }
-}
-}
-]);
+});
 });
 
 server.start(function () {
