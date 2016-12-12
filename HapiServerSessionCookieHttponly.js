@@ -13,10 +13,7 @@ server.register([
 {
 register: require('crumb'),
 options: {
-cookieOptions: {
-isSecure: true
-},
-size: 10
+key: 'crumb'
 }
 }
 ], function (err) {
