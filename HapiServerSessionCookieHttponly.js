@@ -28,6 +28,9 @@ cert: fs.readFileSync('/etc/mysslkeys/example.com/certificate.pem')
 server.register([
 {
 register: require('hapi-auth-basic')
+},
+{
+register: require('hapi-auth-jwt2')
 }
 ], function (err) {
 if (err) {
@@ -49,11 +52,19 @@ name: user.name
 }
 });
 
+server.auth.strategy('jwt', 'jwt', {
+key: 'NeverShareYourSecret', // Never Share your secret key
+validateFunc: function (decoded, request, callback) {
+// do your checks to see if the person is valid
+},
+verifyOptions: {algorithms: ['HS256']} // pick a strong algorithm
+});
+
 server.route({
 method: 'GET',
 path: '/auth',
 config: {
-auth: 'simple',
+auth: 'jwt',
 handler: function (request, reply) {
 reply('hello, ' + request.auth.credentials.name);
 }
